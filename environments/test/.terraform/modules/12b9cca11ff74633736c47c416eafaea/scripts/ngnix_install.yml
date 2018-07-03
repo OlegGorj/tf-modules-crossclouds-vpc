@@ -1,0 +1,26 @@
+#cloud-config
+
+---
+users:
+  - name: cloudservice
+    uid: 2000
+
+write_files:
+  - path: /etc/systemd/system/cloudservice.service
+    permissions: 0644
+    owner: root
+    content: |
+      [Unit]
+      Description=Start a ngnix docker container
+
+      [Service]
+      ExecStart=/usr/bin/docker run --name docker-nginx-alpine --memory="900M" -p 80:80 -d nginx:alpine
+      ExecStop=/usr/bin/docker stop mycloudservice
+      ExecStopPost=/usr/bin/docker rm mycloudservice
+
+runcmd:
+  - systemctl daemon-reload
+  - systemctl start cloudservice.service
+
+output:
+  all: '| tee -a /var/log/cloud-init-output.log'
