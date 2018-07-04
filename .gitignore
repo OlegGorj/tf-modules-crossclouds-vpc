@@ -5,3 +5,4 @@ environments/*/*.tfvars
 environments/*/.terraform
 environments/*/*.tfstate*
 environments/*/backend.tf
+terraform/*.tfvars
