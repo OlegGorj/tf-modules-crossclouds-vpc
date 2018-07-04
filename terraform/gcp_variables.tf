@@ -14,12 +14,12 @@ variable "gcp_project_id" {
 
 variable gcp_region {
   description = "Default to Oregon region."
-  default = "us-west1"
+  default = "northamerica-northeast1" #"us-west1"
 }
 
 variable gcp_instance_type {
   description = "Machine Type. Correlates to an network egress cap."
-  default = "n1-highmem-8"
+  default = "f1-micro" #"n1-highmem-8"
 }
 
 variable gcp_disk_image {
