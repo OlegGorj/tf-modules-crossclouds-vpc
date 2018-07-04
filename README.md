@@ -11,5 +11,15 @@ This project is intended to use Terraform for automated deployment of network in
 Note: this repo is WIP, use at your own risk.
 
 
+## Quick Start
+
+1. Initialize GCP environment
+
+
+```
+cd tf-modules-crossclouds-vpc
+./tf_init.sh tf-admin-dev-xxxxxxxx dev ~/.config/gcloud/tf-admin.json
+
+```
 
 ---
