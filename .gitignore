@@ -6,3 +6,4 @@ environments/*/.terraform
 environments/*/*.tfstate*
 environments/*/backend.tf
 terraform/*.tfvars
+terraform/backend*
