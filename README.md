@@ -22,7 +22,7 @@ cd tf-modules-crossclouds-vpc
 
 ```
 
-1. Initialize AWS environment
+2. Initialize AWS environment
 
 
 ```
