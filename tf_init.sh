@@ -33,7 +33,7 @@ CREDS_FILE_DIR=~/.config/gcloud
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TFVARS_DIR_PATH="${THIS_DIR}/terraform"
 TFVARS_FILE_PATH="${TFVARS_DIR_PATH}/terraform.tfvars"
-TFVAR_CREDS='gcp_credentials_file_path'
+#TFVAR_CREDS='gcp_credentials_file_path'
 TFBACKEND_FILE_PATH="${TFVARS_DIR_PATH}/backend.tf"
 
 function createTFVars() {
@@ -82,14 +82,19 @@ EOF
   fi
 }
 
+# main section
+
 ALLOWED_IP_RANGE=$(curl ifconfig.co)
 
 createTFBackend "${TFBACKEND_FILE_PATH}" "${GCP_PRJ}" "${GCP_ENV}"
 
 createTFVars "${TFVARS_FILE_PATH}"
-addTFVar "${TFVARS_FILE_PATH}" "${TFVAR_CREDS}" "${GCP_CREDS_FILE}"
+addTFVar "${TFVARS_FILE_PATH}" "gcp_credentials_file_path" "${GCP_CREDS_FILE}"
 addTFVar "${TFVARS_FILE_PATH}" "environment" "${GCP_ENV}"
 addTFVar "${TFVARS_FILE_PATH}" "gcp_project_id" "${GCP_PRJ}"
+addTFVar "${TFVARS_FILE_PATH}" "tf_ssh_key" "${TF_VAR_ssh_key}"
+addTFVar "${TFVARS_FILE_PATH}" "tf_ssh_private_key_file" "${TF_VAR_ssh_private_key}"
+addTFVar "${TFVARS_FILE_PATH}" "source_ranges_ips" "${ALLOWED_IP_RANGE}"
 
 #cat << EOF > $TF_ENV.tfvars
 #env = "$TF_ENV"
