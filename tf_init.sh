@@ -9,23 +9,44 @@
 # 1. script creates gcp credentials file under ~/.config/gcloud
 # 2. generates remote backend TF script
 
-FILE_ARG='<GCP project id> <environment (test/dev/prod)> <path to json service account key file>'
+FILE_ARG='<Cloud provider (GCP or AWS)> <GCP project id (only for Cloud Provider - GCP)> <environment (test/dev/prod)> <path to json service account key file>'
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -lt 3 ]; then
   echo 'Error: missing argument.'
   echo "$0 ${FILE_ARG}"
   exit 1
 fi
 
-#if [ -z "$1" ]; then
-#  echo 'Error: missing argument.'
-#  echo "$0 ${FILE_ARG}"
-#  exit 1
-#fi
+function trim_lr() {
+  echo $(echo $1| sed 's,^ *,,; s, *$,,')
+}
 
-GCP_PRJ=$1
-GCP_ENV=$2
-GCP_CREDS_FILE=$3
+function timestamp() {
+  date +"%Y-%m-%d_%H-%M-%S"
+}
+
+function to_lower() {
+  echo $1 | tr "[:upper:]" "[:lower:]"
+}
+
+
+CLOUD=$(to_lower $(trim_lr $1))
+if [[ $CLOUD != "aws" ]] && [[ $CLOUD != "gcp" ]]; then
+  echo "Error: Invalid Cloud Provider <aws or gcp>"
+  exit 1
+fi
+
+if [ ${CLOUD} == "gcp" ]; then
+  GCP_PRJ=$(to_lower $(trim_lr $2))
+  ENV=$(to_lower $(trim_lr $3))
+  CREDS_FILE=$(to_lower $(trim_lr $4))
+
+elif [ ${CLOUD} == "aws" ]
+then
+  ENV=$(to_lower $(trim_lr $2))
+  CREDS_FILE=$(to_lower $(trim_lr $3))
+
+fi
 
 SERVICE_ACCOUNT=terraform
 CREDS_FILE_DIR=~/.config/gcloud
@@ -86,14 +107,20 @@ EOF
 
 ALLOWED_IP_RANGE=$(curl ifconfig.co)
 
-createTFBackend "${TFBACKEND_FILE_PATH}" "${GCP_PRJ}" "${GCP_ENV}"
+createTFBackend "${TFBACKEND_FILE_PATH}" "${GCP_PRJ}" "${ENV}"
 
 createTFVars "${TFVARS_FILE_PATH}"
-addTFVar "${TFVARS_FILE_PATH}" "gcp_credentials_file_path" "${GCP_CREDS_FILE}"
-addTFVar "${TFVARS_FILE_PATH}" "environment" "${GCP_ENV}"
-addTFVar "${TFVARS_FILE_PATH}" "gcp_project_id" "${GCP_PRJ}"
-addTFVar "${TFVARS_FILE_PATH}" "tf_ssh_key" "${TF_VAR_ssh_key}"
-addTFVar "${TFVARS_FILE_PATH}" "tf_ssh_private_key_file" "${TF_VAR_ssh_private_key}"
+
+if [ ${CLOUD} == "gcp" ]; then
+  addTFVar "${TFVARS_FILE_PATH}" "gcp_credentials_file_path" "${CREDS_FILE}"
+  addTFVar "${TFVARS_FILE_PATH}" "gcp_project_id" "${GCP_PRJ}"
+elif [ ${CLOUD} == "aws" ]
+then
+  addTFVar "${TFVARS_FILE_PATH}" "aws_credentials_file_path" "${CREDS_FILE}"
+fi
+addTFVar "${TFVARS_FILE_PATH}" "environment" "${ENV}"
+#addTFVar "${TFVARS_FILE_PATH}" "tf_ssh_key" "${TF_VAR_ssh_key}"
+#addTFVar "${TFVARS_FILE_PATH}" "tf_ssh_private_key_file" "${TF_VAR_ssh_private_key}"
 addTFVar "${TFVARS_FILE_PATH}" "source_ranges_ips" "${ALLOWED_IP_RANGE}"
 
 #cat << EOF > $TF_ENV.tfvars
