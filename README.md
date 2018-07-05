@@ -18,7 +18,16 @@ Note: this repo is WIP, use at your own risk.
 
 ```
 cd tf-modules-crossclouds-vpc
-./tf_init.sh tf-admin-dev-xxxxxxxx dev ~/.config/gcloud/tf-admin.json
+./tf_init.sh GCP tf-admin-dev-xxxxxxxx dev ~/.config/gcloud/tf-admin.json
+
+```
+
+1. Initialize AWS environment
+
+
+```
+cd tf-modules-crossclouds-vpc
+./tf_init.sh AWS dev ~/.aws/credentials
 
 ```
 
