@@ -25,11 +25,11 @@ fi
 
 GCP_PRJ=$1
 GCP_ENV=$2
-GCP_CREDS=$3
+GCP_CREDS_FILE=$3
 
 SERVICE_ACCOUNT=terraform
 CREDS_FILE_DIR=~/.config/gcloud
-CREDS_FILE_PATH="${CREDS_FILE_DIR}/credentials_crosscloud.json"
+#CREDS_FILE_PATH="${CREDS_FILE_DIR}/credentials_crosscloud.json"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TFVARS_DIR_PATH="${THIS_DIR}/terraform"
 TFVARS_FILE_PATH="${TFVARS_DIR_PATH}/terraform.tfvars"
@@ -84,8 +84,12 @@ EOF
 
 ALLOWED_IP_RANGE=$(curl ifconfig.co)
 
-createTFBackend ${TFBACKEND_FILE_PATH} ${GCP_PRJ} ${GCP_ENV}
-createTFVars ${TFVARS_FILE_PATH}
+createTFBackend "${TFBACKEND_FILE_PATH}" "${GCP_PRJ}" "${GCP_ENV}"
+
+createTFVars "${TFVARS_FILE_PATH}"
+addTFVar "${TFVARS_FILE_PATH}" "${TFVAR_CREDS}" "${GCP_CREDS_FILE}"
+addTFVar "${TFVARS_FILE_PATH}" "environment" "${GCP_ENV}"
+addTFVar "${TFVARS_FILE_PATH}" "gcp_project_id" "${GCP_PRJ}"
 
 #cat << EOF > $TF_ENV.tfvars
 #env = "$TF_ENV"
