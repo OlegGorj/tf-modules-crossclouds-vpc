@@ -15,6 +15,7 @@ Note: this repo is WIP, use at your own risk.
 
 1. Initialize GCP environment
 
+This step creates/updates terraform variable file `./terraform/terraform.tfvars` with GCP variables and generates terraform GCP backend file `./terraform/backend.tf`
 
 ```
 cd tf-modules-crossclouds-vpc
@@ -24,12 +25,14 @@ cd tf-modules-crossclouds-vpc
 
 2. Initialize AWS environment
 
+This step creates/updates terraform variable file `./terraform/terraform.tfvars` with AWS variables.
 
 ```
 cd tf-modules-crossclouds-vpc
 ./tf_init.sh AWS dev ~/.aws/credentials
 
 ```
+
 
 
 ---

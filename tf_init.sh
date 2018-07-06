@@ -80,6 +80,8 @@ function addTFVar() {
     echo "" >> $1
     echo "$2 = \"$3\"" >> $1
     echo "Updated $2 in $1."
+  else
+    echo "Key $2 already exist in $1. Not updated."
   fi
 }
 
@@ -114,6 +116,7 @@ createTFVars "${TFVARS_FILE_PATH}"
 if [ ${CLOUD} == "gcp" ]; then
   addTFVar "${TFVARS_FILE_PATH}" "gcp_credentials_file_path" "${CREDS_FILE}"
   addTFVar "${TFVARS_FILE_PATH}" "gcp_project_id" "${GCP_PRJ}"
+  gcloud config set project ${GCP_PRJ}
 elif [ ${CLOUD} == "aws" ]
 then
   addTFVar "${TFVARS_FILE_PATH}" "aws_credentials_file_path" "${CREDS_FILE}"
