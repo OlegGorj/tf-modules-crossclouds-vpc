@@ -18,6 +18,11 @@ Note: this repo is WIP, use at your own risk.
 This step creates/updates terraform variable file `./terraform/terraform.tfvars` with GCP variables and generates terraform GCP backend file `./terraform/backend.tf`
 
 ```
+export GOOGLE_PROJECT=$(gcloud config get-value project)
+export GOOGLE_CREDENTIALS=$(cat ~/.config/gcloud/${USER}-*.json)
+```
+
+```
 cd tf-modules-crossclouds-vpc
 ./tf_init.sh GCP tf-admin-dev-xxxxxxxx dev ~/.config/gcloud/tf-admin.json
 
