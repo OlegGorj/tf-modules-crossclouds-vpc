@@ -86,8 +86,13 @@ resource "google_compute_router_peer" "gcp-router1-peer" {
   name = "gcp-to-aws-bgp1"
   router  = "${google_compute_router.gcp-router1.name}"
   region  = "${google_compute_router.gcp-router1.region}"
+
   peer_ip_address = "${aws_vpn_connection.aws-vpn-connection1.tunnel1_vgw_inside_address}"
   peer_asn = "${var.GCP_TUN1_VPN_GW_ASN}"
+
+#  ip_address = "${var.TUN1_VPN_GW_INSIDE_IP}"
+#  asn = "${var.TUN1_VPN_GW_ASN}"
+
   interface = "${google_compute_router_interface.router_interface1.name}"
 }
 
