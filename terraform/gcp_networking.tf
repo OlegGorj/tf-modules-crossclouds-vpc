@@ -25,7 +25,7 @@ resource "google_compute_address" "gcp-vpn-ip" {
 
 resource "google_compute_vpn_gateway" "gcp-vpn-gw" {
   name    = "gcp-vpn-gw-${var.gcp_region}"
-  network = "${google_compute_network.gcp-network.name}"
+  network = "${google_compute_network.gcp-network.self_link}"
   region  = "${var.gcp_region}"
 }
 
@@ -76,7 +76,7 @@ resource "google_compute_vpn_tunnel" "gcp-tunnel1" {
 resource "google_compute_router" "gcp-router1" {
   name = "gcp-router1"
   region = "${var.gcp_region}"
-  network = "${google_compute_network.gcp-network.name}"
+  network = "${google_compute_network.gcp-network.self_link}"
   bgp {
     asn = "${aws_customer_gateway.aws-cgw.bgp_asn}"
   }
@@ -86,8 +86,13 @@ resource "google_compute_router_peer" "gcp-router1-peer" {
   name = "gcp-to-aws-bgp1"
   router  = "${google_compute_router.gcp-router1.name}"
   region  = "${google_compute_router.gcp-router1.region}"
+
   peer_ip_address = "${aws_vpn_connection.aws-vpn-connection1.tunnel1_vgw_inside_address}"
   peer_asn = "${var.GCP_TUN1_VPN_GW_ASN}"
+
+#  ip_address = "${var.TUN1_VPN_GW_INSIDE_IP}"
+#  asn = "${var.TUN1_VPN_GW_ASN}"
+
   interface = "${google_compute_router_interface.router_interface1.name}"
 }
 

@@ -1,20 +1,16 @@
-/*
- * Terraform variable declarations for AWS.
- */
-
 variable aws_credentials_file_path {
   description = "Locate the AWS credentials file."
   type = "string"
 }
 
 variable aws_region {
-  description = "Default to Oregon region."
-  default = "us-west-2"
+  description = "Default to CA Central region."
+  default = "ca-central-1"
 }
 
 variable aws_instance_type {
-  description = "Machine Type. Includes 'Enhanced Networking' via ENA."
-  default = "r4.2xlarge"
+  description = "Machine Type."
+  default = "t2.micro"
 }
 
 variable aws_disk_image {

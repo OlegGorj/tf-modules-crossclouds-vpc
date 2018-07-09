@@ -2,6 +2,18 @@
  * Terraform compute resources for AWS.
  */
 
+ module "ssh_key_pair" {
+   source    = "git::https://github.com/OlegGorj/tf-modules-aws-key-pair.git?ref=dev-branch"
+   namespace = "namespace"
+   stage     = "dev"
+   name      = "vm-ssh-key"
+   ssh_public_key_path   = "/Users/oleggorj/Downloads/"
+   generate_ssh_key      = "true"
+   private_key_extension = ".pem"
+   public_key_extension  = ".pub"
+   chmod_command         = "chmod 600 %v"
+ }
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -14,7 +26,6 @@ data "aws_ami" "ubuntu" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-
   owners = ["099720109477"] # Canonical
 }
 

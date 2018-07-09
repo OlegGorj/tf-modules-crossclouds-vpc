@@ -1,6 +1,3 @@
-/*
- * Terraform variable declarations for GCP.
- */
 
 variable gcp_credentials_file_path {
   description = "Locate the GCP credentials .json file."

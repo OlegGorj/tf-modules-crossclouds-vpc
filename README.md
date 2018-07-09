@@ -15,6 +15,12 @@ Note: this repo is WIP, use at your own risk.
 
 1. Initialize GCP environment
 
+This step creates/updates terraform variable file `./terraform/terraform.tfvars` with GCP variables and generates terraform GCP backend file `./terraform/backend.tf`
+
+```
+export GOOGLE_PROJECT=$(gcloud config get-value project)
+export GOOGLE_CREDENTIALS=$(cat ~/.config/gcloud/${USER}-*.json)
+```
 
 ```
 cd tf-modules-crossclouds-vpc
@@ -24,12 +30,14 @@ cd tf-modules-crossclouds-vpc
 
 2. Initialize AWS environment
 
+This step creates/updates terraform variable file `./terraform/terraform.tfvars` with AWS variables.
 
 ```
 cd tf-modules-crossclouds-vpc
 ./tf_init.sh AWS dev ~/.aws/credentials
 
 ```
+
 
 
 ---
