@@ -38,6 +38,25 @@ cd tf-modules-crossclouds-vpc
 
 ```
 
+3. Bring up the infrastructure
+
+Usual steps to spin up GCP & AWS infrastructure using Terraform:
+
+```
+terraform init
+terraform plan
+terraform apply
+```
+
+
+4. Clean up
+
+And, final step to dismantle everything and clean up:
+
+```
+terraform plan -destroy
+terraform destroy
+```
 
 
 ---
