@@ -59,8 +59,10 @@ resource "google_compute_forwarding_rule" "fr_udp4500" {
 resource "google_compute_vpn_tunnel" "gcp-tunnel1" {
   name          = "gcp-tunnel1"
   peer_ip       = "${aws_vpn_connection.aws-vpn-connection1.tunnel1_address}"
-  shared_secret = "${aws_vpn_connection.aws-vpn-connection1.tunnel1_preshared_key}"
+  #shared_secret = "${aws_vpn_connection.aws-vpn-connection1.tunnel1_preshared_key}"
   ike_version   = 1
+
+  shared_secret = "a secret message"
 
   target_vpn_gateway = "${google_compute_vpn_gateway.gcp-vpn-gw.self_link}"
 
@@ -111,8 +113,10 @@ resource "google_compute_router_interface" "router_interface1" {
 resource "google_compute_vpn_tunnel" "gcp-tunnel2" {
   name          = "gcp-tunnel2"
   peer_ip       = "${aws_vpn_connection.aws-vpn-connection1.tunnel2_address}"
-  shared_secret = "${aws_vpn_connection.aws-vpn-connection1.tunnel2_preshared_key}"
+  #shared_secret = "${aws_vpn_connection.aws-vpn-connection1.tunnel2_preshared_key}"
   ike_version   = 1
+
+  shared_secret = "a secret message"
 
   target_vpn_gateway = "${google_compute_vpn_gateway.gcp-vpn-gw.self_link}"
 
