@@ -32,7 +32,7 @@ function to_lower() {
 
 CLOUD=$(to_lower $(trim_lr $1))
 if [[ $CLOUD != "aws" ]] && [[ $CLOUD != "gcp" ]]; then
-  echo "Error: Invalid Cloud Provider <aws or gcp>"
+  echo "Error: Invalid Cloud Provider. Supported <aws or gcp> only. "
   exit 1
 fi
 
@@ -40,6 +40,11 @@ if [ ${CLOUD} == "gcp" ]; then
   GCP_PRJ=$(to_lower $(trim_lr $2))
   ENV=$(to_lower $(trim_lr $3))
   CREDS_FILE=$(to_lower $(trim_lr $4))
+  # check if project id exist
+  if [[ -z $(gcloud projects list --format json | jq -r '.[] | .projectId' | grep ${GCP_PRJ} ) ]] ; then
+    echo "Error: can not find GCP project ${GCP_PRJ}."
+    exit 1
+  fi
 
 elif [ ${CLOUD} == "aws" ]
 then
@@ -107,9 +112,24 @@ EOF
 
 # main section
 
+# ** GCP-specific section **
+if [ ${CLOUD} == "gcp" ] ; then
+  # set project active
+  gcloud config set project ${GCP_PRJ}
+  # create terraform service account
+  gcloud iam service-accounts create ${SERVICE_ACCOUNT} --display-name "Terraform admin service account"
+  # generate credentials for taerraform account
+  TF_CREDS=~/.config/gcloud/${SERVICE_ACCOUNT}-${GCP_PRJ}.iam.gserviceaccount.com.json
+  gcloud iam service-accounts keys create ${TF_CREDS} --iam-account ${SERVICE_ACCOUNT}@${GCP_PRJ}.iam.gserviceaccount.com
+  # set iam permissions for terrafor account
+  gcloud projects add-iam-policy-binding service-prj-1-dev-0bca5126 --member serviceAccount:${SERVICE_ACCOUNT}@${GCP_PRJ}.iam.gserviceaccount.com --role roles/viewer
+  gcloud projects add-iam-policy-binding service-prj-1-dev-0bca5126 --member serviceAccount:${SERVICE_ACCOUNT}@${GCP_PRJ}iam.gserviceaccount.com --role roles/storage.admin
+fi
+
 ALLOWED_IP_RANGE=$(curl ifconfig.co)
 
-createTFBackend "${TFBACKEND_FILE_PATH}" "${GCP_PRJ}" "${ENV}"
+# Temporay desable remote backend - keep it local, for testing
+# createTFBackend "${TFBACKEND_FILE_PATH}" "${GCP_PRJ}" "${ENV}"
 
 createTFVars "${TFVARS_FILE_PATH}"
 
