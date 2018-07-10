@@ -22,6 +22,10 @@ export GOOGLE_PROJECT=$(gcloud config get-value project)
 export GOOGLE_CREDENTIALS=$(cat ~/.config/gcloud/${USER}-*.json)
 ```
 
+Init script `tf_init.sh` takes 4 parameters, in case of GCP: <Cloud provider - GCP> <project id> <environment name (dev, test, prod)> <path to admin credentials file>
+
+Hence, by executing following lines, we would set Cloud as `GCP`, use project `tf-admin-dev-xxxxxxxx` with indication of the environment been `dev`, while using credentials `tf-admin.json` to do all that.
+
 ```
 cd tf-modules-crossclouds-vpc
 ./tf_init.sh GCP tf-admin-dev-xxxxxxxx dev ~/.config/gcloud/tf-admin.json
